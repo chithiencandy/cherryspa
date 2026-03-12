@@ -90,17 +90,73 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Booking form logic with Motion One
     const bookingForm = document.getElementById('appointment-form');
     const successMsg = document.getElementById('success-msg');
+    const datetimeInput = document.getElementById('datetime');
+
+    // Set default datetime to now
+    if (datetimeInput) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        datetimeInput.value = now.toISOString().slice(0, 16);
+    }
 
     if (bookingForm && successMsg) {
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const { animate } = await import('motion');
             
-            animate(bookingForm, { opacity: 0, y: -20 }, { duration: 0.4, easing: "ease-in-out" }).finished.then(() => {
-                bookingForm.style.display = 'none';
-                successMsg.style.display = 'flex';
-                animate(successMsg, { opacity: [0, 1], scale: [0.95, 1] }, { duration: 0.6, easing: "ease-out" });
-            });
+            const submitBtn = bookingForm.querySelector('.btn-submit');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Custom Validation
+            const nameInput = document.getElementById('name').value.trim();
+            const phoneInput = document.getElementById('phone').value.trim();
+            const phoneRegex = /^(0|84)[3|5|7|8|9][0-9]{8}$/;
+
+            if (nameInput.length < 2) {
+                alert("Vui lòng nhập họ và tên hợp lệ.");
+                return;
+            }
+
+            if (!phoneRegex.test(phoneInput)) {
+                alert("Vui lòng nhập số điện thoại Việt Nam hợp lệ (VD: 0987654321, 10 số).");
+                return;
+            }
+
+            submitBtn.innerHTML = 'Đang xử lý...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new FormData(bookingForm);
+                const response = await fetch('https://formsubmit.co/ajax/chithiencandy@gmail.com', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    animate(bookingForm, { opacity: 0, y: -20 }, { duration: 0.4, easing: "ease-in-out" }).finished.then(() => {
+                        bookingForm.style.display = 'none';
+                        successMsg.style.display = 'flex';
+                        animate(successMsg, { opacity: [0, 1], scale: [0.95, 1] }, { duration: 0.6, easing: "ease-out" });
+                        bookingForm.reset();
+                        // Reset datetime 
+                        if (datetimeInput) {
+                            const now = new Date();
+                            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                            datetimeInput.value = now.toISOString().slice(0, 16);
+                        }
+                    });
+                } else {
+                    alert('Đã có lỗi xảy ra khi gửi. Vui lòng thử lại sau.');
+                }
+            } catch (error) {
+                alert('Không thể kết nối đến máy chủ. Hãy dùng số điện thoại để đặt lịch.');
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
         });
     }
 

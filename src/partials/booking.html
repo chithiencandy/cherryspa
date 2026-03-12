@@ -38,29 +38,31 @@
             </div>
             
             <div class="booking-form-area">
-                <form id="appointment-form" class="booking-form">
+                <form id="appointment-form" action="https://formsubmit.co/chithiencandy@gmail.com" method="POST" class="booking-form">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
                     <div class="form-group">
-                        <input type="text" id="name" required placeholder="Họ và tên của bạn">
+                        <input type="text" id="name" name="name" required minlength="2" placeholder="Họ và tên của bạn">
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" required placeholder="Số điện thoại">
+                        <input type="tel" id="phone" name="phone" required pattern="^(0|84)[3|5|7|8|9][0-9]{8}$" title="Vui lòng nhập số điện thoại Việt Nam hợp lệ (VD: 0987654321)" placeholder="Số điện thoại">
                     </div>
                     <div class="form-group">
-                        <select id="service" required>
+                        <select id="service" name="service" required>
                             <option value="" disabled selected>Chọn dịch vụ</option>
-                            <option value="phun-xam">Phun xăm thẩm mỹ</option>
-                            <option value="noi-mi">Nối mi</option>
-                            <option value="massage">Massage thư giãn</option>
-                            <option value="goi-dau">Gội đầu dưỡng sinh</option>
-                            <option value="lam-nail">Làm nail</option>
-                            <option value="cham-soc-da">Chăm sóc da & giảm béo</option>
+                            <option value="Phun xăm thẩm mỹ">Phun xăm thẩm mỹ</option>
+                            <option value="Nối mi">Nối mi</option>
+                            <option value="Massage thư giãn">Massage thư giãn</option>
+                            <option value="Gội đầu dưỡng sinh">Gội đầu dưỡng sinh</option>
+                            <option value="Làm nail">Làm nail</option>
+                            <option value="Chăm sóc da & giảm béo">Chăm sóc da & giảm béo</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="datetime-local" id="datetime" required>
+                        <input type="datetime-local" id="datetime" name="datetime" required>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" rows="3" placeholder="Ghi chú thêm (không bắt buộc)"></textarea>
+                        <textarea id="message" name="message" rows="3" placeholder="Ghi chú thêm (không bắt buộc)"></textarea>
                     </div>
                     <button type="submit" class="btn-primary w-100 btn-submit">Xác nhận đặt lịch</button>
                 </form>
